@@ -3,9 +3,9 @@
 ## Example
 
 ```ts
-import ddi from "@project/sdk";
+import ddi from "@ddi-ring/backend";
 
-const response = await sdk.functional.health.check({
+const response = await ddi.functional.health.check({
     host: "http://localhost:4000",
 });
 

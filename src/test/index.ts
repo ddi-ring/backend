@@ -1,5 +1,5 @@
+import ddi from "@ddi-ring/backend";
 import { DynamicExecutor } from "@nestia/e2e";
-import sdk from "@project/sdk";
 
 import { Backend, createBackend } from "@/backend";
 import { config } from "@/infrastructure/config";
@@ -23,7 +23,7 @@ const post_test = async (backend: Backend) => {
 };
 
 const execute = async () => {
-    const connection: sdk.IConnection = { host: `http://localhost:${config("PORT")}` };
+    const connection: ddi.IConnection = { host: `http://localhost:${config("PORT")}` };
     const skip = getArg("--skip");
     const only = getArg("--only");
     const report = await DynamicExecutor.validate({

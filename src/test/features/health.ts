@@ -1,7 +1,7 @@
-import sdk from "@project/sdk";
+import ddi from "@ddi-ring/backend";
 
-export const test_health_check = async (connection: sdk.IConnection) => {
-    const res = await sdk.functional.health.check(connection);
+export const test_health_check = async (connection: ddi.IConnection) => {
+    const res = await ddi.functional.health.check(connection);
     if (res.status === 200 && res.data === "hello world!") return;
     throw Error("Health Check Fail!");
 };

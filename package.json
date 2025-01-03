@@ -63,7 +63,7 @@
         "@eslint/compat": "1.1.1",
         "@nestia/e2e": "^0.7.0",
         "@nestia/sdk": "^4.5.2",
-        "@project/sdk": "file:packages/sdk",
+        "@ddi-ring/backend": "file:packages/sdk",
         "@trivago/prettier-plugin-sort-imports": "5.2.0",
         "@types/aws-lambda": "^8.10.146",
         "@types/cookie-parser": "^1.4.8",

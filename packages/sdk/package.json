@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/ddi-ring/backend/packages/sdk"
     },
-    "author": "rojiwon123",
+    "author": "ddi-ring",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/ddi-ring/backend/issues"
