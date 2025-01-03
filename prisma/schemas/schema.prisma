@@ -12,7 +12,7 @@ generator db {
 generator erd {
   provider = "prisma-markdown"
   output   = "../../ERD.md"
-  title    = "Template"
+  title    = "띠링"
 }
 
 ///  Root Entity of User

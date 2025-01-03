@@ -3,7 +3,7 @@
 ## Example
 
 ```ts
-import sdk from "@project/sdk";
+import ddi from "@project/sdk";
 
 const response = await sdk.functional.health.check({
     host: "http://localhost:4000",

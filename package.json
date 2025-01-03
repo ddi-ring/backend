@@ -1,7 +1,7 @@
 {
-    "name": "safe-nest-template",
+    "name": "@ddi-ring/backend",
     "version": "0.0.0",
-    "description": "type safe nestjs template",
+    "description": "ddi ring service backend project",
     "main": "build/main",
     "scripts": {
         "--------------------runner----------------": "",
@@ -26,16 +26,15 @@
         "format": "prettier . -w",
         "lint": "npx eslint ."
     },
-    "author": "rojiwon123",
+    "author": "ddi-ring",
     "license": "UNLICENSED",
     "repository": {
         "type": "git",
-        "url": "https://github.com/rojiwon123/nestia-template.git"
+        "url": "https://github.com/ddi-ring/backend.git"
     },
     "keywords": [
         "nestjs",
-        "nestia",
-        "effect"
+        "nestia"
     ],
     "nodemonConfig": {
         "watch": [
