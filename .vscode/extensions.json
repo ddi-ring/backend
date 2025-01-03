@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "steoates.autoimport",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "prisma.prisma",
+        "bierner.github-markdown-preview",
+        "github.vscode-pull-request-github",
+        "github.vscode-github-actions",
+        "mhutchie.git-graph",
+        "ms-vscode.js-debug",
+        "ritwickdey.liveserver"
+    ]
+}

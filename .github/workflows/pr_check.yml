@@ -1,0 +1,38 @@
+name: Test ✅
+
+on:
+    pull_request:
+        branches: [main]
+
+env:
+    DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+permissions:
+    contents: read
+    pull-requests: write
+
+jobs:
+    test:
+        uses: ./.github/workflows/test.yml
+
+    comment:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download Test Report 📋
+              uses: actions/download-artifact@v4
+              with:
+                  path: .
+                  name: test_report
+
+            - name: Comment Test Report 💬
+              uses: actions/github-script@main
+              with:
+                  script: |
+                      const { owner, repo } = context.repo;
+                      const issue_number = context.issue.number;
+                      const cmts = await github.rest.issues.listComments({ issue_number, owner, repo });
+                      const fs = require('fs');
+                      const path = './TEST_REPORT.md';
+                      const body = fs.readFileSync(path, 'utf8');
+                      await github.rest.issues.createComment({ issue_number, owner, repo, body });

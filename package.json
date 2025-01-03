@@ -1,0 +1,88 @@
+{
+    "name": "safe-nest-template",
+    "version": "0.0.0",
+    "description": "type safe nestjs template",
+    "main": "build/main",
+    "scripts": {
+        "--------------------runner----------------": "",
+        "start": "npm run build && NODE_ENV=development node build/main",
+        "test": "npm run build:sdk && npm run build:test && NODE_ENV=test node tbuild/test",
+        "--------------------build-----------------": "",
+        "build": "rimraf ./build && tsc -p ./tsconfig.build.json",
+        "build:test": "rimraf ./tbuild && tsc -p ./tsconfig.test.json",
+        "build:prisma": "prisma generate --schema=./prisma/schemas",
+        "build:doc": "rimraf ./packages/doc/openapi.json && nestia swagger",
+        "build:sdk": "rimraf ./sdk && nestia sdk && rimraf ./packages/sdk/lib && tsc -p ./tsconfig.sdk.json && rimraf ./sdk",
+        "build:nestia": "npm run build:sdk && npm run build:doc",
+        "--------------------db--------------------": "",
+        "db:sync": "dotenv -e .env.dev -- prisma migrate dev --schema=./prisma/schemas",
+        "db:deploy": "prisma migrate deploy --schema=./prisma/schemas",
+        "db:console": "dotenv -e .env.dev -- prisma studio --schema=./prisma/schemas",
+        "--------------------init------------------": "",
+        "check": "ts-patch check",
+        "prepare": "ts-patch install && typia patch && npm run build:prisma",
+        "postinstall": "[ -f ./setup.sh ] && /bin/sh ./setup.sh || true",
+        "--------------------lint------------------": "",
+        "format": "prettier . -w",
+        "lint": "npx eslint ."
+    },
+    "author": "rojiwon123",
+    "license": "UNLICENSED",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rojiwon123/nestia-template.git"
+    },
+    "keywords": [
+        "nestjs",
+        "nestia",
+        "effect"
+    ],
+    "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
+        "ext": "ts",
+        "exec": "ts-node src/main -p tsconfig.test.json"
+    },
+    "dependencies": {
+        "@codegenie/serverless-express": "^4.16.0",
+        "@fxts/core": "^1.4.0",
+        "@nestia/core": "^4.5.2",
+        "@nestia/fetcher": "^4.5.2",
+        "@nestjs/common": "^10.4.15",
+        "@nestjs/core": "^10.4.15",
+        "@nestjs/platform-express": "^10.4.15",
+        "@prisma/client": "^6.1.0",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^16.4.7",
+        "helmet": "^8.0.0",
+        "rxjs": "^7.8.1",
+        "typia": "^7.5.1",
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@eslint/compat": "1.1.1",
+        "@nestia/e2e": "^0.7.0",
+        "@nestia/sdk": "^4.5.2",
+        "@project/sdk": "file:packages/sdk",
+        "@trivago/prettier-plugin-sort-imports": "5.2.0",
+        "@types/aws-lambda": "^8.10.146",
+        "@types/cookie-parser": "^1.4.8",
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.10.2",
+        "dotenv-cli": "^8.0.0",
+        "eslint-plugin-deprecation": "^3.0.0",
+        "nestia": "^6.3.1",
+        "nodemon": "^3.1.9",
+        "prettier": "^3.4.2",
+        "prisma": "^6.1.0",
+        "prisma-markdown": "^1.0.9",
+        "rimraf": "^6.0.1",
+        "source-map-support": "^0.5.21",
+        "ts-node": "^10.9.2",
+        "ts-patch": "^3.3.0",
+        "typescript": "5.7.2",
+        "typescript-eslint": "^8.19.0",
+        "typescript-transform-paths": "^3.5.3"
+    }
+}
