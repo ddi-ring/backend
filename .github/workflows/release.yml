@@ -49,6 +49,7 @@ jobs:
               uses: actions/setup-node@main
               with:
                   node-version: 20
+                  registry-url: https://registry.npmjs.org
 
             - name: Configure AWS credentials 🔑
               uses: aws-actions/configure-aws-credentials@main
@@ -66,6 +67,7 @@ jobs:
               uses: deploy-actions/setup-ecr@main
               with:
                   RepositoryName: ddi-ring/backend
+                  ImageTagMutability: IMMUTABLE
 
             - name: Image Tag
               id: image
@@ -94,8 +96,6 @@ jobs:
             - name: Push to ECR
               id: target
               run: |
-                  docker tag ${{ steps.image.outputs.tag }} ${{ steps.ecr.outputs.registry }}/ddi-ring/backend:latest
-                  docker push ${{ steps.ecr.outputs.registry }}/ddi-ring/backend:latest
                   docker push ${{ steps.image.outputs.tag }}
                   echo "image=$(docker inspect --format '{{index .RepoDigests 0}}' ${{ steps.image.outputs.tag }})" >> "$GITHUB_OUTPUT"
 
@@ -109,6 +109,10 @@ jobs:
                   MemorySize: 1024
                   Timeout: 10
                   Environment: ${{ vars.LAMBDA_ENV }}
+                  VpcConfig: ${{ vars.LAMBDA_VPC_CONFIG }}
+                  Aliases: api.ddi-ring.com
+                  AcmCertificateArn: ${{ vars.LAMBDA_ACM }}
+                  HostedZoneId: ${{ vars.LAMBDA_HOSTZONEID }}
 
             # 4. Build & Deploy API Doc & SDK
 
@@ -132,4 +136,4 @@ jobs:
                   git tag -a "$TAG" -m "release $TAG"
                   git push origin "$TAG"
                   gh release create "$TAG" -t "$TAG" --target "${{ github.sha }}" --generate-notes
-                  npm publish ./packages/sdk --access restricted
+                  npm publish ./packages/sdk --access public
