@@ -2,11 +2,6 @@ name: Release 🔖
 
 on:
     workflow_dispatch:
-        inputs:
-            doc:
-                required: true
-                default: false
-                type: boolean
 
 permissions:
     id-token: write
@@ -119,18 +114,15 @@ jobs:
             # 4. Build & Deploy API Doc & SDK
 
             - name: Build API Doc/SDK
-              if: ${{ inputs.doc }}
               run: npm ci && npm run build:nestia
 
             - name: Update API Doc
-              if: ${{ inputs.doc }}
               run: |
                   aws s3 cp --recursive "./packages/doc" s3://${{ vars.S3 }}
                   aws s3 cp "./packages/doc/openapi.json" s3://${{ vars.S3 }}/version/${{ steps.version.outputs.version }}.json
                   aws cloudfront create-invalidation --distribution-id ${{ vars.CF }} --paths "/openapi.json"
 
             - name: Publish SDK
-              if: ${{ inputs.doc }}
               run: |
                   TAG=v${{ steps.version.outputs.version }}
                   git config --global user.email "github-actions@github.com"
