@@ -12,7 +12,10 @@ const NESTIA_CONFIG: nestia.INestiaConfig = {
         openapi: "3.0",
         decompose: true,
         output: "packages/doc/openapi.json",
-        servers: [{ url: "http://localhost:4000", description: "Local Server" }],
+        servers: [
+            { url: "http://localhost:4000", description: "Local Server" },
+            { url: "https://api.ddi-ring.com", description: "PRD 서버" },
+        ],
         security: { bearer: { type: "http", scheme: "bearer" } },
     },
 };
