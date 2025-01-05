@@ -1,4 +1,4 @@
-import ddi from "@ddi-ring/backend";
+import ddi from "@ddi-ring/api";
 
 export const test_health_check = async (connection: ddi.IConnection) => {
     const res = await ddi.functional.health.check(connection);

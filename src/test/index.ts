@@ -1,4 +1,4 @@
-import ddi from "@ddi-ring/backend";
+import ddi from "@ddi-ring/api";
 import { DynamicExecutor } from "@nestia/e2e";
 
 import { Backend, createBackend } from "@/backend";

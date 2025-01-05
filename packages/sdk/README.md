@@ -3,7 +3,7 @@
 ## Example
 
 ```ts
-import ddi from "@ddi-ring/backend";
+import ddi from "@ddi-ring/api";
 
 const response = await ddi.functional.health.check({
     host: "http://localhost:4000",
