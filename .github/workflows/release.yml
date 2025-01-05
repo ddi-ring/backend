@@ -109,18 +109,27 @@ jobs:
                   VpcConfig: ${{ vars.LAMBDA_VPC_CONFIG }}
                   Aliases: api.ddi-ring.com
                   AcmCertificateArn: ${{ vars.LAMBDA_ACM }}
-                  HostedZoneId: ${{ vars.LAMBDA_HOSTZONEID }}
+                  HostedZoneId: ${{ vars.HOSTZONEID }}
 
             # 4. Build & Deploy API Doc & SDK
 
             - name: Build API Doc/SDK
               run: npm ci && npm run build:nestia
 
+            - name: Deploy API Doc
+              id: spa
+              uses: deploy-actions/s3-spa@main
+              with:
+                  BucketName: ddi-ring-doc
+                  Alias: doc.ddi-ring.com
+                  AcmCertificateArn: ${{ vars.DOC_ACM }}
+                  HostedZoneId: ${{ vars.HOSTZONEID }}
+
             - name: Update API Doc
               run: |
-                  aws s3 cp --recursive "./packages/doc" s3://${{ vars.S3 }}
-                  aws s3 cp "./packages/doc/openapi.json" s3://${{ vars.S3 }}/version/${{ steps.version.outputs.version }}.json
-                  aws cloudfront create-invalidation --distribution-id ${{ vars.CF }} --paths "/openapi.json"
+                  aws s3 cp --recursive "./packages/doc" s3://ddi-ring-doc
+                  aws s3 cp "./packages/doc/openapi.json" s3://ddi-ring-doc/version/${{ steps.version.outputs.version }}.json
+                  aws cloudfront create-invalidation --distribution-id ${{ steps.spa.outputs.DistributionId }} --paths "/openapi.json"
 
             - name: Generate Release Note
               run: |
