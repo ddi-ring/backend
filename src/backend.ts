@@ -21,7 +21,10 @@ export const createBackend = async (options: OmitKeyof<nest.NestApplicationOptio
             ?.split(/\s+/)
             .filter((line) => line !== "") ?? [];
     await prisma().$connect();
-    const app = await NestFactory.create(AppModule, { ...options, ...(origin.length > 0 ? { cors: { origin, credentials: true } } : {}) });
+    const app = await NestFactory.create(AppModule, {
+        ...options,
+        ...(origin.length > 0 ? { cors: { origin, credentials: true } } : { cors: { origin: "*", credentials: false } }),
+    });
     app.use(cookieParser(), helmet({ contentSecurityPolicy: true, hidePoweredBy: true }));
     await app.init();
     const end = async () => {
