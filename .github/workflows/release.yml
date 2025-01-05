@@ -122,7 +122,7 @@ jobs:
                   aws s3 cp "./packages/doc/openapi.json" s3://${{ vars.S3 }}/version/${{ steps.version.outputs.version }}.json
                   aws cloudfront create-invalidation --distribution-id ${{ vars.CF }} --paths "/openapi.json"
 
-            - name: Publish SDK
+            - name: Generate Release Note
               run: |
                   TAG=v${{ steps.version.outputs.version }}
                   git config --global user.email "github-actions@github.com"
@@ -130,4 +130,6 @@ jobs:
                   git tag -a "$TAG" -m "release $TAG"
                   git push origin "$TAG"
                   gh release create "$TAG" -t "$TAG" --target "${{ github.sha }}" --generate-notes
-                  npm publish ./packages/sdk --access restricted
+
+            - name: Publish SDK
+              run: npm publish ./packages/sdk --access restricted
