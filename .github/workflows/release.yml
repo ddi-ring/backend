@@ -26,7 +26,7 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/main')
         uses: ./.github/workflows/test.yml
 
-    release:
+    deployment:
         needs: test
         if: ${{ inputs.deploy }}
         runs-on: ubuntu-latest
@@ -118,8 +118,8 @@ jobs:
                   HostedZoneId: ${{ vars.HOSTZONEID }}
 
     documentation:
-        needs: release
-        if: success() || needs.release.result == 'skipped'
+        needs: deployment
+        if: success() || needs.deployment.result == 'skipped'
         runs-on: ubuntu-latest
 
         steps:
