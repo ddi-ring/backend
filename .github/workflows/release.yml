@@ -2,6 +2,11 @@ name: Release 🔖
 
 on:
     workflow_dispatch:
+        inputs:
+            deploy:
+                type: boolean
+                default: true
+                required: true
 
 permissions:
     id-token: write
@@ -23,6 +28,7 @@ jobs:
 
     release:
         needs: test
+        if: ${{ inputs.deploy }}
         runs-on: ubuntu-latest
 
         steps:
@@ -110,6 +116,40 @@ jobs:
                   Aliases: api.ddi-ring.com
                   AcmCertificateArn: ${{ vars.LAMBDA_ACM }}
                   HostedZoneId: ${{ vars.HOSTZONEID }}
+
+    documentation:
+        needs: release
+        if: success() || needs.release.result == 'skipped'
+        runs-on: ubuntu-latest
+
+        steps:
+            # 1. Setup Workflow
+
+            - name: Checkout 🛎️
+              uses: actions/checkout@main
+
+            - name: Check Version
+              id: version
+              run: |
+                  VERSION=$(node -p "require('./package.json').version")
+                  if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+                    echo "Tag v$VERSION already exist"
+                    exit 1
+                  fi
+                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+            - name: Setup NodeJS
+              uses: actions/setup-node@main
+              with:
+                  node-version: 20
+                  registry-url: https://npm.pkg.github.com/
+                  scope: "@ddi-ring"
+
+            - name: Configure AWS credentials 🔑
+              uses: aws-actions/configure-aws-credentials@main
+              with:
+                  role-to-assume: ${{ vars.AWS_ASSUME_ROLE_ARN }}
+                  aws-region: ap-northeast-2
 
             # 4. Build & Deploy API Doc & SDK
 
