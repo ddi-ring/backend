@@ -163,7 +163,7 @@ jobs:
               uses: deploy-actions/s3-spa@main
               with:
                   BucketName: ddi-ring-doc
-                  Alias: doc.ddi-ring.com
+                  Aliases: doc.ddi-ring.com
                   AcmCertificateArn: ${{ vars.DOC_ACM }}
                   HostedZoneId: ${{ vars.HOSTZONEID }}
 
