@@ -3,10 +3,14 @@ name: Release 🔖
 on:
     workflow_dispatch:
         inputs:
-            deploy:
-                type: boolean
-                default: true
+            deployment:
                 required: true
+                default: false
+                type: boolean
+            documentation:
+                required: true
+                default: false
+                type: boolean
 
 permissions:
     id-token: write
@@ -28,7 +32,7 @@ jobs:
 
     deployment:
         needs: test
-        if: ${{ inputs.deploy }}
+        if: ${{ inputs.deployment }}
         runs-on: ubuntu-latest
 
         steps:
@@ -37,15 +41,9 @@ jobs:
             - name: Checkout 🛎️
               uses: actions/checkout@main
 
-            - name: Check Version
-              id: version
-              run: |
-                  VERSION=$(node -p "require('./package.json').version")
-                  if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-                    echo "Tag v$VERSION already exist"
-                    exit 1
-                  fi
-                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            - name: Get Version
+              id: release
+              run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
             - name: Setup NodeJS
               uses: actions/setup-node@main
@@ -74,7 +72,7 @@ jobs:
 
             - name: Image Tag
               id: image
-              run: echo "tag=${{ steps.ecr.outputs.registry }}/ddi-ring/backend:${{ steps.version.outputs.version }}" >> "$GITHUB_OUTPUT"
+              run: echo "tag=${{ steps.ecr.outputs.registry }}/ddi-ring/backend:${{ steps.release.outputs.version }}" >> "$GITHUB_OUTPUT"
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
@@ -85,7 +83,6 @@ jobs:
               with:
                   load: true
                   target: builder
-                  tags: ${{ steps.image.outputs.tag }}
                   cache-from: type=gha, ref=main
                   cache-to: type=gha, ref=main, mode=max
 
@@ -93,6 +90,7 @@ jobs:
               uses: docker/build-push-action@v6
               with:
                   load: true
+                  target: runner
                   tags: ${{ steps.image.outputs.tag }}
                   cache-from: type=gha, ref=main
 
@@ -100,15 +98,15 @@ jobs:
               id: target
               run: |
                   docker push ${{ steps.image.outputs.tag }}
-                  echo "image=$(docker inspect --format '{{index .RepoDigests 0}}' ${{ steps.image.outputs.tag }})" >> "$GITHUB_OUTPUT"
+                  echo "digest=$(docker inspect --format '{{index .RepoDigests 0}}' ${{ steps.image.outputs.tag }})" >> "$GITHUB_OUTPUT"
 
             # 3. Deploy Server
 
             - name: Deploy Lambda
-              uses: deploy-actions/lambda-api@main
+              uses: deploy-actions/lambda-api@v1
               with:
                   Name: ddi-ring-backend
-                  ImageUri: ${{ steps.target.outputs.image }}
+                  ImageUri: ${{ steps.target.outputs.digest }}
                   MemorySize: 1024
                   Timeout: 10
                   Environment: ${{ secrets.LAMBDA_ENV }}
@@ -118,8 +116,8 @@ jobs:
                   HostedZoneId: ${{ vars.HOSTZONEID }}
 
     documentation:
-        needs: deployment
-        if: success() || needs.deployment.result == 'skipped'
+        needs: test
+        if: ${{ inputs.documentation }}
         runs-on: ubuntu-latest
 
         steps:
@@ -128,15 +126,19 @@ jobs:
             - name: Checkout 🛎️
               uses: actions/checkout@main
 
-            - name: Check Version
-              id: version
+            - name: Generate Release Note
+              id: release
               run: |
                   VERSION=$(node -p "require('./package.json').version")
-                  if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-                    echo "Tag v$VERSION already exist"
-                    exit 1
-                  fi
-                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+                  TAG=v$VERSION
+
+                  git config --global user.email "github-actions@github.com"
+                  git config --global user.name "GitHub Actions"
+                  git tag -a "$TAG" -m "release $TAG"
+                  git push origin "$TAG"
+                  gh release create "$TAG" -t "$TAG" --target "${{ github.sha }}" --generate-notes
+
+                  echo "version=VERSION" >> "$GITHUB_OUTPUT"
 
             - name: Setup NodeJS
               uses: actions/setup-node@main
@@ -153,10 +155,10 @@ jobs:
 
             # 4. Build & Deploy API Doc & SDK
 
-            - name: Build API Doc/SDK
+            - name: Build Doc & SDK
               run: npm ci && npm run build:nestia
 
-            - name: Deploy API Doc
+            - name: Setup Page
               id: spa
               uses: deploy-actions/s3-spa@main
               with:
@@ -165,20 +167,11 @@ jobs:
                   AcmCertificateArn: ${{ vars.DOC_ACM }}
                   HostedZoneId: ${{ vars.HOSTZONEID }}
 
-            - name: Update API Doc
+            - name: Deploy Doc
               run: |
                   aws s3 cp --recursive "./packages/doc" s3://ddi-ring-doc
-                  aws s3 cp "./packages/doc/openapi.json" s3://ddi-ring-doc/version/${{ steps.version.outputs.version }}.json
+                  aws s3 cp "./packages/doc/openapi.json" s3://ddi-ring-doc/version/${{ steps.release.outputs.version }}.json
                   aws cloudfront create-invalidation --distribution-id ${{ steps.spa.outputs.DistributionId }} --paths "/openapi.json"
-
-            - name: Generate Release Note
-              run: |
-                  TAG=v${{ steps.version.outputs.version }}
-                  git config --global user.email "github-actions@github.com"
-                  git config --global user.name "GitHub Actions"
-                  git tag -a "$TAG" -m "release $TAG"
-                  git push origin "$TAG"
-                  gh release create "$TAG" -t "$TAG" --target "${{ github.sha }}" --generate-notes
 
             - name: Publish SDK
               run: npm publish ./packages/sdk --access restricted
