@@ -14,26 +14,3 @@ generator erd {
   output   = "../../ERD.md"
   title    = "띠링"
 }
-
-///  Root Entity of User
-///
-///  @namespace All
-///
-///  @namespace User
-///
-///  @author rojiwon
-///
-model users {
-  ///  `uuid` string
-  ///
-  id         String    @id @database.Uuid
-  ///  displayed name of user
-  ///
-  name       String
-  ///  url of user profile image
-  ///
-  image_url  String?
-  created_at DateTime  @database.Timestamptz
-  updated_at DateTime? @database.Timestamptz
-  deleted_at DateTime? @database.Timestamptz
-}

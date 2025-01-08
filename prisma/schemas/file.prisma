@@ -1,0 +1,26 @@
+/// 첨부 파일 엔티티
+///
+/// 다양한 첨부 파일 리소스의 메타 정보를 관리하기 위해 만들었습니다.
+///
+/// 일반적인 파일명은 `name.extension` 형태입니다.
+///
+/// `key`는 파일 저장소에서 리소스를 찾기 위한 식별자입니다.
+///
+/// @author rojiwon123
+model attachment_file {
+    /// uuid
+    id         String    @id @database.Uuid
+    /// image.png 에서 `image` 부분입니다.
+    name       String
+    /// image.png 에서 `png` 부분입니다.
+    extension  String
+    /// 파일 저장소 내에 실제 리소스의 위치를 나타내는 정보입니다.
+    key        String
+    /// 생성일자
+    created_at DateTime  @database.Timestamptz(6)
+    /// 삭제일자
+    deleted_at DateTime? @database.Timestamptz(6)
+
+    event_card_templates event_card_template[]
+    event_cards          event_card[]
+}

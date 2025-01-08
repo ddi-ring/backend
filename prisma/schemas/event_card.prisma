@@ -1,0 +1,86 @@
+/// 이벤트 카드 템플릿 엔티티
+///
+/// 템플릿은 사용자가 생성하는 정보가 아닙니다.
+///
+/// 서비스 관리자는 적절한 엔티티를 등록해야 하며 사용자는 등록된 템플릿을 사용하여 이벤트 카드를 생성합니다.
+///
+/// 각각의 템플릿은 고유한 디자인 레이아웃을 가집니다. 이 정보는 서버에 저장되지 않으며 고유한 id를 기준으로 클라이언트가 레이아웃을 구성합니다.
+model event_card_template {
+    /// uuid
+    id                 String    @id @database.Uuid
+    /// 템플릿 선택 페이지에서 디스플레이되는 이미지
+    thumbnail_image_id String    @database.Uuid
+    /// 템플릿 명칭
+    title              String    @database.VarChar(255)
+    /// 생성일자
+    created_at         DateTime  @database.Timestamptz(6)
+    /// 삭제일자
+    deleted_at         DateTime? @database.Timestamptz(6)
+
+    thumbnail_image attachment_file @relation(fields: [thumbnail_image_id], references: [id])
+    event_cards     event_card[]
+}
+
+/// 이벤트 카드 엔티티
+///
+/// 사용자가 생성한 카드 정보입니다.
+///
+/// 스타일 정보를 적용하는 템플릿이 연결되어 있으며 사용자가 입력한 정보들을 포함합니다.
+///
+/// 카드 관리를 위해서는 `password`가 필요합니다.
+model event_card {
+    /// uuid
+    id                 String    @id @database.Uuid
+    /// 템플릿 id
+    template_id        String    @database.Uuid
+    /// 대표 이미지
+    thumbnail_image_id String    @database.Uuid
+    /// 관리용 비밀번호
+    password           String    @database.VarChar(50)
+    /// 제목
+    title              String    @database.VarChar(255)
+    /// 기본 주소
+    address            String    @database.VarChar(255)
+    /// 상세 주소
+    address_detail     String    @database.VarChar(255)
+    /// 초대글
+    invitation_message String    @database.Text
+    /// 이벤트 일자
+    event_time         DateTime  @database.Timestamptz(0)
+    /// 생성일자
+    created_at         DateTime  @database.Timestamptz(6)
+    /// 수정일자
+    updated_at         DateTime? @database.Timestamptz(6)
+    /// 삭제일자
+    deleted_at         DateTime? @database.Timestamptz(6)
+
+    template        event_card_template  @relation(fields: [template_id], references: [id])
+    thumbnail_image attachment_file      @relation(fields: [thumbnail_image_id], references: [id])
+    messages        event_card_message[]
+}
+
+/// 카드 메시지 엔티티
+///
+/// 방명록 혹은 축하 메시지가 저장됩니다.
+///
+/// 누구나 메시지를 남길 수 있으므로 추후 자신의 메시지를 삭제 혹은 수정하기 위해서 `password`를 사용합니다.
+model event_card_message {
+    /// uuid
+    id            String    @id @database.Uuid
+    /// 이벤트 카드 id
+    event_card_id String    @database.Uuid
+    /// 관리용 비밀번호
+    password      String    @database.VarChar(50)
+    /// 작성자명
+    username      String    @database.VarChar(50)
+    /// 메시지
+    message       String    @database.Text
+    /// 생성일자
+    created_at    DateTime  @database.Timestamptz(6)
+    /// 수정일자
+    updated_at    DateTime? @database.Timestamptz(6)
+    /// 삭제일자
+    deleted_at    DateTime? @database.Timestamptz(6)
+
+    event_card event_card @relation(fields: [event_card_id], references: [id])
+}
