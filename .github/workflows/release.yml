@@ -113,7 +113,7 @@ jobs:
                   VpcConfig: ${{ vars.LAMBDA_VPC_CONFIG }}
                   Aliases: api.ddi-ring.com
                   AcmCertificateArn: ${{ vars.LAMBDA_ACM }}
-                  HostedZoneId: ${{ vars.HOSTZONEID }}
+                  HostedZoneId: ${{ vars.HOSTEDZONEID }}
 
     documentation:
         needs: test
@@ -165,7 +165,7 @@ jobs:
                   BucketName: ddi-ring-doc
                   Aliases: doc.ddi-ring.com
                   AcmCertificateArn: ${{ vars.DOC_ACM }}
-                  HostedZoneId: ${{ vars.HOSTZONEID }}
+                  HostedZoneId: ${{ vars.HOSTEDZONEID }}
 
             - name: Deploy Doc
               run: |
