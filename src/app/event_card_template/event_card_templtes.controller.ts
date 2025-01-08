@@ -33,12 +33,12 @@ export class EventCardTemplatesController {
      *
      * @summary 이벤트 카드 템플릿 목록 조회
      * @tag event-card
-     * @param template_id 템플릿 id
+     * @param event_card_template_id 템플릿 id
      * @return 템플릿 정보
      */
-    @core.TypedRoute.Get(":template_id")
-    async get(@core.TypedParam("template_id") template_id: Regex.UUID): Promise<EventCardTemplateDTO> {
-        template_id;
+    @core.TypedRoute.Get(":event_card_template_id")
+    async get(@core.TypedParam("event_card_template_id") event_card_template_id: Regex.UUID): Promise<EventCardTemplateDTO> {
+        event_card_template_id;
         return notImpl();
     }
 }

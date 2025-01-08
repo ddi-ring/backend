@@ -21,6 +21,6 @@ model attachment_file {
     /// 삭제일자
     deleted_at DateTime? @database.Timestamptz(6)
 
-    event_card_templates event_card_template[]
-    event_cards          event_card[]
+    event_card_files          event_card_file[]
+    event_card_template_files event_card_template_file[]
 }

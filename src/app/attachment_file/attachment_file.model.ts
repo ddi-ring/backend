@@ -1,6 +1,7 @@
 import { Regex } from "@/util/type";
 
-export interface AttachmentFile {
+export interface AttachmentFile<Type extends string> {
+    type: Type;
     /** 고유 id */
     id: Regex.UUID;
     /** image.png 에서 `image` 부분입니다. */

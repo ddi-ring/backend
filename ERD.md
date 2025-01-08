@@ -15,6 +15,11 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
+"event_card_template_file" {
+  String id PK
+  DateTime created_at
+  DateTime deleted_at "nullable"
+}
 "event_card" {
   String id PK
   String template_id FK
@@ -27,6 +32,12 @@ erDiagram
   DateTime event_time
   DateTime created_at
   DateTime updated_at "nullable"
+  DateTime deleted_at "nullable"
+}
+"event_card_file" {
+  String id PK
+  EventCardFileType type
+  DateTime created_at
   DateTime deleted_at "nullable"
 }
 "event_card_message" {
@@ -47,9 +58,11 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
-"event_card_template" }o--|| "attachment_file" : thumbnail_image
+"event_card_template" }o--|| "event_card_template_file" : thumbnail_image
+"event_card_template_file" |o--|| "attachment_file" : attachment_file
 "event_card" }o--|| "event_card_template" : template
-"event_card" }o--|| "attachment_file" : thumbnail_image
+"event_card" }o--|| "event_card_file" : thumbnail_image
+"event_card_file" |o--|| "attachment_file" : attachment_file
 "event_card_message" }o--|| "event_card" : event_card
 ```
 
@@ -70,6 +83,14 @@ erDiagram
 - `title`: 템플릿 명칭
 - `created_at`: 생성일자
 - `deleted_at`: 삭제일자
+
+### `event_card_template_file`
+
+**Properties**
+
+- `id`:
+- `created_at`: 데이터 추적을 위해 해당 레코드 생성 일자를 기록
+- `deleted_at`:
 
 ### `event_card`
 
@@ -95,6 +116,19 @@ erDiagram
 - `created_at`: 생성일자
 - `updated_at`: 수정일자
 - `deleted_at`: 삭제일자
+
+### `event_card_file`
+
+이벤트 카드 파일 첨부 파일 sub type entity
+
+첨부 파일 엔티티와 1:1 관계
+
+**Properties**
+
+- `id`:
+- `type`: 카드내 리소스 유형
+- `created_at`: 데이터 추적을 위해 해당 레코드 생성 일자를 기록
+- `deleted_at`:
 
 ### `event_card_message`
 

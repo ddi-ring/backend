@@ -17,8 +17,18 @@ model event_card_template {
     /// 삭제일자
     deleted_at         DateTime? @database.Timestamptz(6)
 
-    thumbnail_image attachment_file @relation(fields: [thumbnail_image_id], references: [id])
+    thumbnail_image event_card_template_file @relation(fields: [thumbnail_image_id], references: [id])
     event_cards     event_card[]
+}
+
+model event_card_template_file {
+    id         String    @id @database.Uuid
+    /// 데이터 추적을 위해 해당 레코드 생성 일자를 기록
+    created_at DateTime  @database.Timestamptz(6)
+    deleted_at DateTime? @database.Timestamptz(6)
+
+    attachment_file attachment_file       @relation(fields: [id], references: [id])
+    templates       event_card_template[]
 }
 
 /// 이벤트 카드 엔티티
@@ -55,8 +65,28 @@ model event_card {
     deleted_at         DateTime? @database.Timestamptz(6)
 
     template        event_card_template  @relation(fields: [template_id], references: [id])
-    thumbnail_image attachment_file      @relation(fields: [thumbnail_image_id], references: [id])
+    thumbnail_image event_card_file      @relation(fields: [thumbnail_image_id], references: [id])
     messages        event_card_message[]
+}
+
+enum EventCardFileType {
+    thumbnail_image
+    gallery_image
+}
+
+/// 이벤트 카드 파일 첨부 파일 sub type entity
+///
+/// 첨부 파일 엔티티와 1:1 관계
+model event_card_file {
+    id         String            @id @database.Uuid
+    /// 카드내 리소스 유형
+    type       EventCardFileType
+    /// 데이터 추적을 위해 해당 레코드 생성 일자를 기록
+    created_at DateTime          @database.Timestamptz(6)
+    deleted_at DateTime?         @database.Timestamptz(6)
+
+    attachment_file attachment_file @relation(fields: [id], references: [id])
+    event_cards     event_card[]
 }
 
 /// 카드 메시지 엔티티
