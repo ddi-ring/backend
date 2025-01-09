@@ -138,7 +138,7 @@ jobs:
                   git push origin "$TAG"
                   gh release create "$TAG" -t "$TAG" --target "${{ github.sha }}" --generate-notes
 
-                  echo "version=VERSION" >> "$GITHUB_OUTPUT"
+                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
             - name: Setup NodeJS
               uses: actions/setup-node@main
