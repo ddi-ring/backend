@@ -69,7 +69,11 @@ export class EventCardService implements IEventCardService {
         return { event_card_file_id: file.attachment_file_id, presigned_url };
     }
 
-    async remove(input: IEventCardService.GetInput): Promise<void> {
-        await prisma().event_card.updateMany({ where: { id: input.event_card_id, deleted_at: null }, data: { deleted_at: new Date() } });
+    async remove(target: IEventCardService.GetInput, input: IEventCardService.RemoveInput): Promise<void> {
+        const card = await prisma().event_card.findFirst({ where: { id: target.event_card_id, deleted_at: null } });
+        if (isNull(card)) throw new Err<EventCardErr.NotFound>({ code: "EVENT_CARD_NOT_FOUND" }, nest.HttpStatus.NOT_FOUND);
+        if (card.password !== input.password)
+            throw new Err<EventCardErr.PasswordInvalid>({ code: "EVENT_CARD_PASSWORD_INVALID" }, nest.HttpStatus.FORBIDDEN);
+        await prisma().event_card.updateMany({ where: { id: target.event_card_id }, data: { deleted_at: new Date() } });
     }
 }

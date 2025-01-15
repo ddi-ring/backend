@@ -23,3 +23,5 @@ export interface EventCardCreateInputDTO
     thumbnail_image_id: Regex.UUID;
 }
 export interface EventCardCreateOutputDTO extends EventCard.Id {}
+
+export interface EventCardRemoveInputDTO extends Pick<EventCard, "password"> {}
