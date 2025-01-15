@@ -81,6 +81,7 @@ jobs:
             - name: Docker Build Builder Stage
               uses: docker/build-push-action@v6
               with:
+                  context: .
                   load: true
                   target: builder
                   cache-from: type=gha, ref=main
@@ -89,6 +90,7 @@ jobs:
             - name: Docker Build Runner Stage
               uses: docker/build-push-action@v6
               with:
+                  context: .
                   load: true
                   target: runner
                   tags: ${{ steps.image.outputs.tag }}
