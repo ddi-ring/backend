@@ -1,6 +1,7 @@
 import core from "@nestia/core";
 import * as nest from "@nestjs/common";
 
+import { EventCardErr } from "@/common/err/err_code/event_card.code";
 import { Regex } from "@/util/type";
 
 import {
@@ -23,6 +24,7 @@ export class EventCardsController {
      * @param event_card_id 카드 id
      * @return 이벤트 카드 정보
      */
+    @core.TypedException<EventCardErr.NotFound>({ status: nest.HttpStatus.NOT_FOUND })
     @core.TypedRoute.Get(":event_card_id")
     async get(@core.TypedParam("event_card_id") event_card_id: Regex.UUID): Promise<EventCardDTO> {
         return this.service.get({ event_card_id });
@@ -36,6 +38,8 @@ export class EventCardsController {
      * @param body 카드 생성 정보
      * @return 카드 id
      */
+    @core.TypedException<EventCardErr.FileNotFound>({ status: nest.HttpStatus.NOT_FOUND })
+    @core.TypedException<EventCardErr.FileTypeInvalid>({ status: nest.HttpStatus.UNPROCESSABLE_ENTITY })
     @core.TypedRoute.Post()
     async create(@core.TypedBody() body: EventCardCreateInputDTO): Promise<EventCardCreateOutputDTO> {
         return this.service.create(body);
