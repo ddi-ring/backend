@@ -44,7 +44,7 @@ export class EventCardsController {
 
 @nest.Controller("event-card-files")
 export class EventCardFilesController {
-    constructor(private readonly service: IEventCardService) {}
+    constructor(@nest.Inject(IEventCardService.Token) private readonly service: IEventCardService) {}
     /**
      * 이벤트 카드 관련하여 업로드에 필요한 파일 정보를 생성합니다.
      *
