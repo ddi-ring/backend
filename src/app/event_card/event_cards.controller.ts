@@ -31,7 +31,7 @@ export class EventCardsController {
     }
 
     /**
-     * 이벤트 카들르 생성합니다.
+     * 이벤트 카드를 생성합니다.
      *
      * @summary 이벤트 카드 생성
      * @tag event-card
@@ -43,6 +43,18 @@ export class EventCardsController {
     @core.TypedRoute.Post()
     async create(@core.TypedBody() body: EventCardCreateInputDTO): Promise<EventCardCreateOutputDTO> {
         return this.service.create(body);
+    }
+
+    /**
+     * 이벤트 카드를 삭제합니다.
+     *
+     * @summary 이벤트 카드 생성
+     * @tag event-card
+     * @param event_card_id 카드 id
+     */
+    @core.TypedRoute.Delete(":event_card_id")
+    async remove(@core.TypedParam("event_card_id") event_card_id: Regex.UUID): Promise<void> {
+        return this.service.remove({ event_card_id });
     }
 }
 

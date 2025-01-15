@@ -68,4 +68,8 @@ export class EventCardService implements IEventCardService {
         const presigned_url = await this.fileService.preSign({ key: file.key, action: "put", duration: 60 * 3 /** 3min */ });
         return { event_card_file_id: file.attachment_file_id, presigned_url };
     }
+
+    async remove(input: IEventCardService.GetInput): Promise<void> {
+        await prisma().event_card.updateMany({ where: { id: input.event_card_id, deleted_at: null }, data: { deleted_at: new Date() } });
+    }
 }

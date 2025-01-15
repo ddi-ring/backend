@@ -12,6 +12,7 @@ export interface IEventCardService {
     readonly get: (input: IEventCardService.GetInput) => Promise<EventCardDTO>;
     readonly create: (input: IEventCardService.CreateInput) => Promise<EventCardCreateOutputDTO>;
     readonly createFile: (input: IEventCardService.CreateFileInput) => Promise<EventCardFileCreateOutputDTO>;
+    readonly remove: (input: IEventCardService.GetInput) => Promise<void>;
 }
 
 export namespace IEventCardService {
