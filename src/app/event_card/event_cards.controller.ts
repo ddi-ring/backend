@@ -43,10 +43,10 @@ export class EventCardsController {
     }
 }
 
-@nest.Controller("event-cards/file")
+@nest.Controller("event-card-files")
 export class EventCardsFileController {
     /**
-     * 업로드에 필요한 파일 정보를 생성합니다.
+     * 이벤트 카드 관련하여 업로드에 필요한 파일 정보를 생성합니다.
      *
      * 응답으로 얻은 presigned url을 사용해서 실제 리소스를 업로드할 수 있습니다.
      *
