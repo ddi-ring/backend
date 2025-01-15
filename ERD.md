@@ -8,21 +8,9 @@
 
 ```mermaid
 erDiagram
-"event_card_template" {
-  String id PK
-  String thumbnail_image_id FK
-  String title
-  DateTime created_at
-  DateTime deleted_at "nullable"
-}
-"event_card_template_file" {
-  String id PK
-  DateTime created_at
-  DateTime deleted_at "nullable"
-}
 "event_card" {
   String id PK
-  String template_id FK
+  String template_key
   String thumbnail_image_id FK
   String password
   String title
@@ -58,39 +46,10 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
-"event_card_template" }o--|| "event_card_template_file" : thumbnail_image
-"event_card_template_file" |o--|| "attachment_file" : attachment_file
-"event_card" }o--|| "event_card_template" : template
 "event_card" }o--|| "event_card_file" : thumbnail_image
 "event_card_file" |o--|| "attachment_file" : attachment_file
 "event_card_message" }o--|| "event_card" : event_card
 ```
-
-### `event_card_template`
-
-이벤트 카드 템플릿 엔티티
-
-템플릿은 사용자가 생성하는 정보가 아닙니다.
-
-서비스 관리자는 적절한 엔티티를 등록해야 하며 사용자는 등록된 템플릿을 사용하여 이벤트 카드를 생성합니다.
-
-각각의 템플릿은 고유한 디자인 레이아웃을 가집니다. 이 정보는 서버에 저장되지 않으며 고유한 id를 기준으로 클라이언트가 레이아웃을 구성합니다.
-
-**Properties**
-
-- `id`: uuid
-- `thumbnail_image_id`: 템플릿 선택 페이지에서 디스플레이되는 이미지
-- `title`: 템플릿 명칭
-- `created_at`: 생성일자
-- `deleted_at`: 삭제일자
-
-### `event_card_template_file`
-
-**Properties**
-
-- `id`:
-- `created_at`: 데이터 추적을 위해 해당 레코드 생성 일자를 기록
-- `deleted_at`:
 
 ### `event_card`
 
@@ -105,7 +64,7 @@ erDiagram
 **Properties**
 
 - `id`: uuid
-- `template_id`: 템플릿 id
+- `template_key`: 템플릿 id
 - `thumbnail_image_id`: 대표 이미지
 - `password`: 관리용 비밀번호
 - `title`: 제목

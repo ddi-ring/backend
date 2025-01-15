@@ -1,6 +1,6 @@
-import { OmitKeyof, Regex } from "@/util/type";
+import { Regex } from "@/util/type";
 
-import { AttachmentFileCreateInputDTO, AttachmentFileCreateOutputDTO } from "../attachment_file/attachment_file.dto";
+import { AttachmentFileCreateInputDTO } from "../attachment_file/attachment_file.dto";
 import { EventCard } from "./event_card.model";
 
 export interface EventCardDTO
@@ -12,8 +12,9 @@ export interface EventCardDTO
 }
 
 export interface EventCardFileCreateInputDTO extends AttachmentFileCreateInputDTO<EventCard.FileType> {}
-export interface EventCardFileCreateOutputDTO extends OmitKeyof<AttachmentFileCreateOutputDTO, "attachment_file_id"> {
+export interface EventCardFileCreateOutputDTO {
     event_card_file_id: Regex.UUID;
+    presigned_url: Regex.URI;
 }
 
 export interface EventCardCreateInputDTO
