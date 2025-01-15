@@ -23,10 +23,7 @@ export class EventCardService implements IEventCardService {
         return {
             id: card.id,
             template_key: card.template_key,
-            thumbnail_image_url: await this.fileService.preSign({
-                key: card.thumbnail_image.attachment_file.key,
-                action: "get",
-            }),
+            thumbnail_image_url: this.fileService.getUrl(card.thumbnail_image.attachment_file),
             title: card.title,
             address: card.address,
             address_detail: card.address_detail,
@@ -68,7 +65,7 @@ export class EventCardService implements IEventCardService {
         await prisma().event_card_file.create({
             data: { id: file.attachment_file_id, type: input.type, created_at: new Date() },
         });
-        const presigned_url = await this.fileService.preSign({ key: file.key, action: "put" });
+        const presigned_url = await this.fileService.preSign({ key: file.key, action: "put", duration: 60 * 3 /** 3min */ });
         return { event_card_file_id: file.attachment_file_id, presigned_url };
     }
 }

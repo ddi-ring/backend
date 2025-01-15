@@ -45,9 +45,14 @@ export class AttachmentFileService implements IAttachmentFileService {
                 input.action === "get" ?
                     new s3.GetObjectCommand({ Bucket, Key, ResponseContentDisposition: "inline" })
                 :   new s3.PutObjectCommand({ Bucket, Key }),
+                { expiresIn: input.duration },
             ),
         );
         _url.hostname = config("RESOURCE_DOMAIN");
         return _url.toString();
+    }
+
+    getUrl(input: IAttachmentFileService.GetUrlInput): Regex.URI {
+        return `https://${config("RESOURCE_DOMAIN")}/${input.key}`;
     }
 }

@@ -165,15 +165,15 @@ jobs:
               id: spa
               uses: deploy-actions/s3-spa@v1
               with:
-                  BucketName: ddi-ring-doc
+                  BucketName: doc.ddi-ring.com
                   Aliases: doc.ddi-ring.com
                   AcmCertificateArn: ${{ vars.DOC_ACM }}
                   HostedZoneId: ${{ vars.HOSTEDZONEID }}
 
             - name: Deploy Doc
               run: |
-                  aws s3 cp --recursive "./packages/doc" s3://ddi-ring-doc
-                  aws s3 cp "./packages/doc/openapi.json" s3://ddi-ring-doc/version/${{ steps.release.outputs.version }}.json
+                  aws s3 cp --recursive "./packages/doc" s3://doc.ddi-ring.com
+                  aws s3 cp "./packages/doc/openapi.json" s3://doc.ddi-ring.com/version/${{ steps.release.outputs.version }}.json
                   aws cloudfront create-invalidation --distribution-id ${{ steps.spa.outputs.DistributionId }} --paths "/openapi.json"
 
             - name: Publish SDK

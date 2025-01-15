@@ -7,6 +7,7 @@ export interface IAttachmentFileService {
     readonly get: (input: IAttachmentFileService.GetInput) => Promise<OmitKeyof<AttachmentFile<string>, "type">>;
     readonly create: (input: IAttachmentFileService.CreateInput) => Promise<AttachmentFileCreateOutputDTO>;
     readonly preSign: (input: IAttachmentFileService.PreSignInput) => Promise<Regex.URI>;
+    readonly getUrl: (input: IAttachmentFileService.GetUrlInput) => Regex.URI;
 }
 
 export namespace IAttachmentFileService {
@@ -17,6 +18,7 @@ export namespace IAttachmentFileService {
     export interface CreateInput extends AttachmentFileCreateInputDTO<string> {}
     export interface PreSignInput extends Pick<AttachmentFile<string>, "key"> {
         action: "get" | "put";
-        // duration: number;
+        duration: number;
     }
+    export interface GetUrlInput extends Pick<AttachmentFile<string>, "key"> {}
 }
