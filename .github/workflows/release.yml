@@ -116,6 +116,7 @@ jobs:
                   Aliases: api.ddi-ring.com
                   AcmCertificateArn: ${{ vars.LAMBDA_ACM }}
                   HostedZoneId: ${{ vars.HOSTEDZONEID }}
+                  Policies: ${{ vars.LAMBDA_POLICIES }}
 
     documentation:
         needs: test
