@@ -22,8 +22,9 @@ export interface Config {
      *
      */
     LOG_LEVEL: LogLevelType;
-    /** resource storage name */
+    /** Resource Storage Name */
     BUCKET: string;
+    /** Resource Alternative Domain */
     RESOURCE_DOMAIN: string;
 }
 
