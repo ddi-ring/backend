@@ -13,3 +13,9 @@ export interface AttachmentFile<Type extends string> {
     /** 생성일자 */
     created_at: Regex.DateTime;
 }
+
+export namespace AttachmentFile {
+    export interface Id {
+        attachment_file_id: Regex.UUID;
+    }
+}

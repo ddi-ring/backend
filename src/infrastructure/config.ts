@@ -22,6 +22,10 @@ export interface Config {
      *
      */
     LOG_LEVEL: LogLevelType;
+    /** Resource Storage Name */
+    BUCKET: string;
+    /** Resource Alternative Domain */
+    RESOURCE_DOMAIN: string;
 }
 
 const loadConfig = Make.once((): Config => {

@@ -1,7 +1,6 @@
 import core from "@nestia/core";
 import * as nest from "@nestjs/common";
 
-import { notImpl } from "@/util/not_impl";
 import { Regex } from "@/util/type";
 
 import {
@@ -11,9 +10,11 @@ import {
     EventCardFileCreateInputDTO,
     EventCardFileCreateOutputDTO,
 } from "./event_card.dto";
+import { IEventCardService } from "./event_card.service.interface";
 
 @nest.Controller("event-cards")
 export class EventCardsController {
+    constructor(@nest.Inject(IEventCardService.Token) private readonly service: IEventCardService) {}
     /**
      * 이벤트 카드 정보를 보여줍니다.
      *
@@ -24,8 +25,7 @@ export class EventCardsController {
      */
     @core.TypedRoute.Get(":event_card_id")
     async get(@core.TypedParam("event_card_id") event_card_id: Regex.UUID): Promise<EventCardDTO> {
-        event_card_id;
-        return notImpl();
+        return this.service.get({ event_card_id });
     }
 
     /**
@@ -38,15 +38,15 @@ export class EventCardsController {
      */
     @core.TypedRoute.Post()
     async create(@core.TypedBody() body: EventCardCreateInputDTO): Promise<EventCardCreateOutputDTO> {
-        body;
-        return notImpl();
+        return this.service.create(body);
     }
 }
 
-@nest.Controller("event-cards/file")
-export class EventCardsFileController {
+@nest.Controller("event-card-files")
+export class EventCardFilesController {
+    constructor(private readonly service: IEventCardService) {}
     /**
-     * 업로드에 필요한 파일 정보를 생성합니다.
+     * 이벤트 카드 관련하여 업로드에 필요한 파일 정보를 생성합니다.
      *
      * 응답으로 얻은 presigned url을 사용해서 실제 리소스를 업로드할 수 있습니다.
      *
@@ -57,7 +57,6 @@ export class EventCardsFileController {
      */
     @core.TypedRoute.Post()
     async create(@core.TypedBody() body: EventCardFileCreateInputDTO): Promise<EventCardFileCreateOutputDTO> {
-        body;
-        return notImpl();
+        return this.service.createFile(body);
     }
 }

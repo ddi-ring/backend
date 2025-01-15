@@ -1,11 +1,16 @@
 import { AttachmentFile } from "@/app/attachment_file/attachment_file.model";
-import { EventCardTemplate } from "@/app/event_card_template/event_card_template.model";
 import { Extract, Regex } from "@/util/type";
 
 export interface EventCard {
     id: Regex.UUID;
-    /** 이벤트 카드 템플릿 정보 */
-    template: EventCard.Template;
+    /**
+     * 이벤트 카드 템플릿 정보
+     *
+     * 템플릿을 식별할 수 있는 템플릿의 고유한 키값입니다.
+     *
+     * UI상에서 해당 키를 기준으로 레이아웃 디자인을 적용합니다.
+     */
+    template_key: string;
     /** 카드 대표 이미지 정보 */
     thumbnail_image: EventCard.ThumbnailImage;
     /** 관리자용 비밀번호 */
@@ -30,7 +35,6 @@ export namespace EventCard {
     export interface Id {
         event_card_id: Regex.UUID;
     }
-    export interface Template extends Pick<EventCardTemplate, "id" | "title" | "created_at"> {}
 
     export type FileType = "thumbnail_image" | "gallery_image";
     export interface ThumbnailImage extends AttachmentFile<Extract<FileType, "thumbnail_image">> {}
