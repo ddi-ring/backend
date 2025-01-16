@@ -1,3 +1,4 @@
+import { EventCard } from "@/app/event_card/event_card.model";
 import { Page } from "@/common/page";
 
 import { EventCardComment } from "./event_card_comment.model";
@@ -8,7 +9,7 @@ export interface EventCardCommentCreateInputDTO extends Pick<EventCardComment, "
 
 export interface EventCardCommentCreateOutputDTO extends EventCardComment.Id {}
 
-export interface EventCardCommentSearchDTO extends Page.Search {}
+export interface EventCardCommentSearchDTO extends Page.Search, EventCard.Id {}
 export interface EventCardCommentPaginatedDTO extends Page.Paginated<EventCardCommentDTO> {}
 
 export interface EventCardCommentRemoveInputDTO extends Pick<EventCardComment, "password"> {}

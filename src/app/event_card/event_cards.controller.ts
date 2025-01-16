@@ -1,9 +1,7 @@
 import core from "@nestia/core";
 import * as nest from "@nestjs/common";
 
-import { EventCardCommentPaginatedDTO, EventCardCommentSearchDTO } from "@/app/event_card_comment/event_card_comment.dto";
 import { EventCardErr } from "@/common/err/err_code/event_card.code";
-import { notImpl } from "@/util/not_impl";
 import { Regex } from "@/util/type";
 
 import {
@@ -30,7 +28,7 @@ export class EventCardsController {
     @core.TypedException<EventCardErr.NotFound>({ status: nest.HttpStatus.NOT_FOUND })
     @core.TypedRoute.Get(":event_card_id")
     async get(@core.TypedParam("event_card_id") event_card_id: Regex.UUID): Promise<EventCardDTO> {
-        return this.service.get({ event_card_id });
+        return this.service.getDTO({ event_card_id });
     }
 
     /**
@@ -63,27 +61,6 @@ export class EventCardsController {
         @core.TypedBody() body: EventCardRemoveInputDTO,
     ): Promise<void> {
         return this.service.remove({ event_card_id }, body);
-    }
-
-    /**
-     * 이벤트 카드 메시지 목록 정보를 보여줍니다.
-     *
-     * 메시지란 비회원 권한으로 누구나 이벤트 카드에 남길 수 있는 축하 메시지 혹은 방명록을 의미합니다.
-     *
-     * @summary 이벤트 카드 메시지 목록 조회
-     * @tag event-card
-     * @param event_card_id 카드 id
-     * @param query 조회 쿼리
-     * @return 이벤트 카드 메시지 목록
-     */
-    @core.TypedRoute.Get(":event_card_id/comments")
-    async paginate(
-        @core.TypedParam("event_card_id") event_card_id: Regex.UUID,
-        @core.TypedQuery() query: EventCardCommentSearchDTO,
-    ): Promise<EventCardCommentPaginatedDTO> {
-        event_card_id;
-        query;
-        return notImpl();
     }
 }
 

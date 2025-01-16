@@ -10,7 +10,8 @@ import {
 import { EventCard } from "./event_card.model";
 
 export interface IEventCardService {
-    readonly get: (target: IEventCardService.GetInput) => Promise<EventCardDTO>;
+    readonly get: (target: IEventCardService.GetInput) => Promise<EventCard>;
+    readonly getDTO: (target: IEventCardService.GetInput) => Promise<EventCardDTO>;
     readonly create: (input: IEventCardService.CreateInput) => Promise<EventCardCreateOutputDTO>;
     readonly createFile: (input: IEventCardService.CreateFileInput) => Promise<EventCardFileCreateOutputDTO>;
     readonly remove: (target: IEventCardService.GetInput, input: IEventCardService.RemoveInput) => Promise<void>;
