@@ -30,17 +30,17 @@ CREATE TABLE "event_card_file" (
 );
 
 -- CreateTable
-CREATE TABLE "event_card_message" (
+CREATE TABLE "event_card_comment" (
     "id" UUID NOT NULL,
     "event_card_id" UUID NOT NULL,
     "password" VARCHAR(50) NOT NULL,
     "username" VARCHAR(50) NOT NULL,
-    "message" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL,
     "updated_at" TIMESTAMPTZ(6),
     "deleted_at" TIMESTAMPTZ(6),
 
-    CONSTRAINT "event_card_message_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "event_card_comment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -62,4 +62,4 @@ ALTER TABLE "event_card" ADD CONSTRAINT "event_card_thumbnail_image_id_fkey" FOR
 ALTER TABLE "event_card_file" ADD CONSTRAINT "event_card_file_id_fkey" FOREIGN KEY ("id") REFERENCES "attachment_file"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "event_card_message" ADD CONSTRAINT "event_card_message_event_card_id_fkey" FOREIGN KEY ("event_card_id") REFERENCES "event_card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "event_card_comment" ADD CONSTRAINT "event_card_comment_event_card_id_fkey" FOREIGN KEY ("event_card_id") REFERENCES "event_card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

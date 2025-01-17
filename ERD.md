@@ -28,12 +28,12 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
-"event_card_message" {
+"event_card_comment" {
   String id PK
   String event_card_id FK
   String password
   String username
-  String message
+  String content
   DateTime created_at
   DateTime updated_at "nullable"
   DateTime deleted_at "nullable"
@@ -48,7 +48,7 @@ erDiagram
 }
 "event_card" }o--|| "event_card_file" : thumbnail_image
 "event_card_file" |o--|| "attachment_file" : attachment_file
-"event_card_message" }o--|| "event_card" : event_card
+"event_card_comment" }o--|| "event_card" : event_card
 ```
 
 ### `event_card`
@@ -68,7 +68,7 @@ erDiagram
 - `thumbnail_image_id`: 대표 이미지
 - `password`: 관리용 비밀번호
 - `title`: 제목
-- `address`: 기본 주소
+- `address`: 기본 주���
 - `address_detail`: 상세 주소
 - `invitation_message`: 초대글
 - `event_time`: 이벤트 일자
@@ -89,9 +89,9 @@ erDiagram
 - `created_at`: 데이터 추적을 위해 해당 레코드 생성 일자를 기록
 - `deleted_at`:
 
-### `event_card_message`
+### `event_card_comment`
 
-카드 메시지 엔티티
+축하 메시지(방명록) 엔티티
 
 방명록 혹은 축하 메시지가 저장됩니다.
 
@@ -103,7 +103,7 @@ erDiagram
 - `event_card_id`: 이벤트 카드 id
 - `password`: 관리용 비밀번호
 - `username`: 작성자명
-- `message`: 메시지
+- `content`: content
 - `created_at`: 생성일자
 - `updated_at`: 수정일자
 - `deleted_at`: 삭제일자

@@ -7,11 +7,14 @@ import {
     EventCardFileCreateInputDTO,
     EventCardFileCreateOutputDTO,
 } from "./event_card.dto";
+import { EventCard } from "./event_card.model";
 
 export interface IEventCardService {
-    readonly get: (input: IEventCardService.GetInput) => Promise<EventCardDTO>;
+    readonly get: (target: IEventCardService.GetInput) => Promise<EventCard>;
+    readonly getDTO: (target: IEventCardService.GetInput) => Promise<EventCardDTO>;
     readonly create: (input: IEventCardService.CreateInput) => Promise<EventCardCreateOutputDTO>;
     readonly createFile: (input: IEventCardService.CreateFileInput) => Promise<EventCardFileCreateOutputDTO>;
+    readonly remove: (target: IEventCardService.GetInput, input: IEventCardService.RemoveInput) => Promise<void>;
 }
 
 export namespace IEventCardService {
@@ -21,4 +24,6 @@ export namespace IEventCardService {
     }
     export interface CreateInput extends EventCardCreateInputDTO {}
     export interface CreateFileInput extends EventCardFileCreateInputDTO {}
+
+    export interface RemoveInput extends Pick<EventCard, "password"> {}
 }

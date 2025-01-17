@@ -8,13 +8,14 @@ import { prisma } from "@/infrastructure/db";
 import { Make } from "@/util/make";
 
 import { EventCardCreateOutputDTO, EventCardDTO, EventCardFileCreateOutputDTO } from "./event_card.dto";
+import { EventCard } from "./event_card.model";
 import { IEventCardService } from "./event_card.service.interface";
 
 @nest.Injectable()
 export class EventCardService implements IEventCardService {
     constructor(@nest.Inject(IAttachmentFileService.Token) private readonly fileService: IAttachmentFileService) {}
 
-    async get(input: IEventCardService.GetInput): Promise<EventCardDTO> {
+    async get(input: IEventCardService.GetInput): Promise<EventCard> {
         const card = await prisma().event_card.findFirst({
             where: { id: input.event_card_id, deleted_at: null },
             include: { thumbnail_image: { include: { attachment_file: true } } },
@@ -23,14 +24,29 @@ export class EventCardService implements IEventCardService {
         return {
             id: card.id,
             template_key: card.template_key,
-            thumbnail_image_url: this.fileService.getUrl(card.thumbnail_image.attachment_file),
+            thumbnail_image: {
+                type: "thumbnail_image",
+                id: card.thumbnail_image.id,
+                key: card.thumbnail_image.attachment_file.key,
+                name: card.thumbnail_image.attachment_file.name,
+                extension: card.thumbnail_image.attachment_file.extension,
+                created_at: card.thumbnail_image.attachment_file.created_at.toISOString(),
+            },
             title: card.title,
+            password: card.password,
             address: card.address,
             address_detail: card.address_detail,
             invitation_message: card.invitation_message,
             event_time: card.event_time.toISOString(),
             created_at: card.created_at.toISOString(),
             updated_at: card.updated_at?.toISOString() ?? null,
+        };
+    }
+    async getDTO(input: IEventCardService.GetInput): Promise<EventCardDTO> {
+        const card = await this.get(input);
+        return {
+            ...card,
+            thumbnail_image_url: this.fileService.getUrl(card.thumbnail_image),
         };
     }
     async create(input: IEventCardService.CreateInput): Promise<EventCardCreateOutputDTO> {
@@ -67,5 +83,12 @@ export class EventCardService implements IEventCardService {
         });
         const presigned_url = await this.fileService.preSign({ key: file.key, action: "put", duration: 60 * 3 /** 3min */ });
         return { event_card_file_id: file.attachment_file_id, presigned_url };
+    }
+
+    async remove(target: IEventCardService.GetInput, input: IEventCardService.RemoveInput): Promise<void> {
+        const card = await this.get(target);
+        if (card.password !== input.password)
+            throw new Err<EventCardErr.PasswordInvalid>({ code: "EVENT_CARD_PASSWORD_INVALID" }, nest.HttpStatus.FORBIDDEN);
+        await prisma().event_card.updateMany({ where: { id: target.event_card_id }, data: { deleted_at: new Date() } });
     }
 }

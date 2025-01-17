@@ -9,5 +9,6 @@ import { EventCardFilesController, EventCardsController } from "./event_cards.co
     imports: [AttachmentFileModule],
     providers: [{ provide: IEventCardService.Token, useClass: EventCardService }],
     controllers: [EventCardsController, EventCardFilesController],
+    exports: [IEventCardService.Token],
 })
 export class EventCardModule {}

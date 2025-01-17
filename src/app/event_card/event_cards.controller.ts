@@ -10,6 +10,7 @@ import {
     EventCardDTO,
     EventCardFileCreateInputDTO,
     EventCardFileCreateOutputDTO,
+    EventCardRemoveInputDTO,
 } from "./event_card.dto";
 import { IEventCardService } from "./event_card.service.interface";
 
@@ -27,11 +28,11 @@ export class EventCardsController {
     @core.TypedException<EventCardErr.NotFound>({ status: nest.HttpStatus.NOT_FOUND })
     @core.TypedRoute.Get(":event_card_id")
     async get(@core.TypedParam("event_card_id") event_card_id: Regex.UUID): Promise<EventCardDTO> {
-        return this.service.get({ event_card_id });
+        return this.service.getDTO({ event_card_id });
     }
 
     /**
-     * 이벤트 카들르 생성합니다.
+     * 이벤트 카드를 생성합니다.
      *
      * @summary 이벤트 카드 생성
      * @tag event-card
@@ -43,6 +44,23 @@ export class EventCardsController {
     @core.TypedRoute.Post()
     async create(@core.TypedBody() body: EventCardCreateInputDTO): Promise<EventCardCreateOutputDTO> {
         return this.service.create(body);
+    }
+
+    /**
+     * 이벤트 카드를 삭제합니다.
+     *
+     * @summary 이벤트 카드 삭제
+     * @tag event-card
+     * @param event_card_id 카드 id
+     */
+    @core.TypedException<EventCardErr.PasswordInvalid>({ status: nest.HttpStatus.FORBIDDEN })
+    @core.TypedException<EventCardErr.NotFound>({ status: nest.HttpStatus.NOT_FOUND })
+    @core.TypedRoute.Delete(":event_card_id")
+    async remove(
+        @core.TypedParam("event_card_id") event_card_id: Regex.UUID,
+        @core.TypedBody() body: EventCardRemoveInputDTO,
+    ): Promise<void> {
+        return this.service.remove({ event_card_id }, body);
     }
 }
 
