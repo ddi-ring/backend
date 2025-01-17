@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
+import { logger } from "@/infrastructure/logger/bootstrap-logger";
 import { Make } from "@/util/make";
 
 import { config } from "./config";
-import { logger } from "./logger";
 
 const createClient = () => {
     const client = new PrismaClient({

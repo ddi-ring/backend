@@ -5,7 +5,7 @@ import { Response } from "express";
 
 import { Err } from "@/common/err/err";
 import { SystemErr } from "@/common/err/err_code/system.code";
-import { logger } from "@/infrastructure/logger";
+import { logger } from "@/infrastructure/logger/bootstrap-logger";
 
 @nest.Catch()
 export class AllExceptionFilter implements nest.ExceptionFilter {
