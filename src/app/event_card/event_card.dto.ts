@@ -5,6 +5,7 @@ import { Regex } from "@/util/type";
 
 import { EventCard } from "./event_card.model";
 
+type Time = string & typia.tags.Pattern<"^(?:[0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$">;
 export interface EventCardDTO
     extends Pick<
         EventCard,
@@ -14,9 +15,9 @@ export interface EventCardDTO
     /** 이벤트 일자(KST) */
     event_date: string & typia.tags.Format<"date">;
     /** 시작 시간(KST) */
-    event_start_time: string & typia.tags.Format<"time">;
+    event_start_time: Time;
     /** 끝 시간(KST) */
-    event_end_time: string & typia.tags.Format<"time">;
+    event_end_time: Time;
 }
 
 export interface EventCardFileCreateInputDTO extends AttachmentFileCreateInputDTO<EventCard.FileType> {}

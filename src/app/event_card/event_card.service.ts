@@ -1,6 +1,5 @@
-import { isNull } from "@fxts/core";
+import { isNull, isString } from "@fxts/core";
 import * as nest from "@nestjs/common";
-import typia from "typia";
 
 import { IAttachmentFileService } from "@/app/attachment_file/attachment_file.service.interface";
 import { Err } from "@/common/err/err";
@@ -50,7 +49,7 @@ export class EventCardService implements IEventCardService {
     }
 
     /** date to YYYY-MM-DD KST */
-    toYYYYMMDD(date: Regex.DateTime): string & typia.tags.Format<"date"> {
+    toYYYYMMDD(date: Regex.DateTime): EventCardDTO["event_date"] {
         const kstDate = new Date(new Date(date).getTime() + 9 * 60 * 60 * 1000);
         const year = kstDate.getUTCFullYear();
         const month = (kstDate.getUTCMonth() + 1).toString().padStart(2, "0");
@@ -58,7 +57,7 @@ export class EventCardService implements IEventCardService {
         return `${year}-${month}-${day}`;
     }
     /** date to HH:mm:ss KST */
-    toHHmmss(date: Regex.DateTime): string & typia.tags.Format<"time"> {
+    toHHmmss(date: Regex.DateTime): EventCardDTO["event_start_time"] {
         const kstDate = new Date(new Date(date).getTime() + 9 * 60 * 60 * 1000);
         const hour = kstDate.getUTCHours().toString().padStart(2, "0");
         const min = kstDate.getUTCMinutes().toString().padStart(2, "0");
@@ -66,11 +65,9 @@ export class EventCardService implements IEventCardService {
         return `${hour}:${min}:${sec}`;
     }
 
-    toEventTime(input: {
-        event_date: string & typia.tags.Format<"date">;
-        event_start_time: string & typia.tags.Format<"time">;
-        event_end_time: string & typia.tags.Format<"time">;
-    }): Pick<EventCard, "event_started_at" | "event_ended_at"> {
+    toEventTime(
+        input: Pick<EventCardDTO, "event_date" | "event_start_time" | "event_end_time">,
+    ): Pick<EventCard, "event_started_at" | "event_ended_at"> {
         const [year, month, day] = input.event_date.split("-").map((str) => +str) as [number, number, number];
         const [s_hour, s_min, s_sec] = input.event_start_time.split(":").map((str) => +str) as [number, number, number];
         const [e_hour, e_min, e_sec] = input.event_start_time.split(":").map((str) => +str) as [number, number, number];
@@ -89,7 +86,8 @@ export class EventCardService implements IEventCardService {
             event_end_time: this.toHHmmss(card.event_ended_at),
         };
     }
-    async create(input: IEventCardService.CreateInput): Promise<EventCardCreateOutputDTO> {
+
+    async assertThumbnailImageId(input: Required<Pick<IEventCardService.CreateInput, "thumbnail_image_id">>): Promise<Regex.UUID> {
         const thumbnail_image = await prisma().event_card_file.findFirst({
             where: { id: input.thumbnail_image_id, deleted_at: null },
             include: { attachment_file: true },
@@ -98,12 +96,18 @@ export class EventCardService implements IEventCardService {
             throw new Err<EventCardErr.FileNotFound>({ code: "EVENT_CARD_FILE_NOT_FOUND" }, nest.HttpStatus.NOT_FOUND);
         if (thumbnail_image.type !== "thumbnail_image")
             throw new Err<EventCardErr.FileTypeInvalid>({ code: "EVENT_CARD_FILE_TYPE_INVALID" }, nest.HttpStatus.UNPROCESSABLE_ENTITY);
+        return thumbnail_image.id;
+    }
+
+    async create(input: IEventCardService.CreateInput): Promise<EventCardCreateOutputDTO> {
+        const thumbnail_image_id =
+            isString(input.thumbnail_image_id) ? await this.assertThumbnailImageId({ thumbnail_image_id: input.thumbnail_image_id }) : null;
         const event_card_id = Make.uuid();
         await prisma().event_card.create({
             data: {
                 id: event_card_id,
                 template_key: input.template_key,
-                thumbnail_image_id: thumbnail_image.id,
+                thumbnail_image_id,
                 password: input.password,
                 title: input.title,
                 address: input.address,
