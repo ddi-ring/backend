@@ -3,7 +3,7 @@ import { Handler } from "aws-lambda";
 
 import { createBackend } from "@/backend";
 import { SystemErr } from "@/common/err/err_code/system.code";
-import { logger } from "@/infrastructure/logger/bootstrap-logger";
+import { logger } from "@/infrastructure/logger";
 
 let app: Handler | null = null;
 

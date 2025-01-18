@@ -1,6 +1,5 @@
-import { logger } from "@/infrastructure/logger/bootstrap-logger";
-
 import { createBackend } from "./backend";
+import { logger } from "./infrastructure/logger";
 
 const bootstrap = async () => {
     try {
