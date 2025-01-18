@@ -24,14 +24,17 @@ export class EventCardService implements IEventCardService {
         return {
             id: card.id,
             template_key: card.template_key,
-            thumbnail_image: {
-                type: "thumbnail_image",
-                id: card.thumbnail_image.id,
-                key: card.thumbnail_image.attachment_file.key,
-                name: card.thumbnail_image.attachment_file.name,
-                extension: card.thumbnail_image.attachment_file.extension,
-                created_at: card.thumbnail_image.attachment_file.created_at.toISOString(),
-            },
+            thumbnail_image:
+                card.thumbnail_image ?
+                    {
+                        type: "thumbnail_image",
+                        id: card.thumbnail_image.id,
+                        key: card.thumbnail_image.attachment_file.key,
+                        name: card.thumbnail_image.attachment_file.name,
+                        extension: card.thumbnail_image.attachment_file.extension,
+                        created_at: card.thumbnail_image.attachment_file.created_at.toISOString(),
+                    }
+                :   null,
             title: card.title,
             password: card.password,
             address: card.address,
@@ -46,7 +49,7 @@ export class EventCardService implements IEventCardService {
         const card = await this.get(input);
         return {
             ...card,
-            thumbnail_image_url: this.fileService.getUrl(card.thumbnail_image),
+            thumbnail_image_url: card.thumbnail_image ? this.fileService.getUrl(card.thumbnail_image) : null,
         };
     }
     async create(input: IEventCardService.CreateInput): Promise<EventCardCreateOutputDTO> {

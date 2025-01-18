@@ -8,7 +8,7 @@ export interface EventCardDTO
         EventCard,
         "id" | "template_key" | "title" | "address" | "address_detail" | "invitation_message" | "event_time" | "created_at" | "updated_at"
     > {
-    thumbnail_image_url: Regex.URI;
+    thumbnail_image_url: Regex.URI | null;
 }
 
 export interface EventCardFileCreateInputDTO extends AttachmentFileCreateInputDTO<EventCard.FileType> {}
@@ -20,7 +20,7 @@ export interface EventCardFileCreateOutputDTO {
 export interface EventCardCreateInputDTO
     extends Pick<EventCard, "title" | "password" | "invitation_message" | "address" | "address_detail" | "event_time"> {
     template_key: string;
-    thumbnail_image_id: Regex.UUID;
+    thumbnail_image_id?: Regex.UUID;
 }
 export interface EventCardCreateOutputDTO extends EventCard.Id {}
 
