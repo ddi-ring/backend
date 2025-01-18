@@ -1,6 +1,6 @@
+import { AttachmentFileCreateInputDTO } from "@/app/attachment_file/attachment_file.dto";
 import { Regex } from "@/util/type";
 
-import { AttachmentFileCreateInputDTO } from "../attachment_file/attachment_file.dto";
 import { EventCard } from "./event_card.model";
 
 export interface EventCardDTO

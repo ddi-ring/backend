@@ -1,12 +1,12 @@
 import { isNull } from "@fxts/core";
 import * as nest from "@nestjs/common";
 
+import { IEventCardService } from "@/app/event_card/event_card.service.interface";
 import { Err } from "@/common/err/err";
 import { EventCardCommentErr } from "@/common/err/err_code/event_card_comment.code";
 import { prisma } from "@/infrastructure/db";
 import { Make } from "@/util/make";
 
-import { IEventCardService } from "../event_card/event_card.service.interface";
 import {
     EventCardCommentCreateInputDTO,
     EventCardCommentCreateOutputDTO,
