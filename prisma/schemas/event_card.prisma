@@ -44,7 +44,7 @@ model event_card {
     /// 템플릿 id
     template_key       String
     /// 대표 이미지
-    thumbnail_image_id String    @database.Uuid
+    thumbnail_image_id String?   @database.Uuid
     /// 관리용 비밀번호
     password           String    @database.VarChar(50)
     /// 제목
@@ -64,7 +64,7 @@ model event_card {
     /// 삭제일자
     deleted_at         DateTime? @database.Timestamptz(6)
 
-    thumbnail_image event_card_file      @relation(fields: [thumbnail_image_id], references: [id])
+    thumbnail_image event_card_file?     @relation(fields: [thumbnail_image_id], references: [id])
     messages        event_card_comment[]
 }
 

@@ -12,7 +12,7 @@ export interface EventCard {
      */
     template_key: string;
     /** 카드 대표 이미지 정보 */
-    thumbnail_image: EventCard.ThumbnailImage;
+    thumbnail_image: EventCard.ThumbnailImage | null;
     /** 관리자용 비밀번호 */
     password: string;
     /** 주제 */

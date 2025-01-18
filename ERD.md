@@ -11,7 +11,7 @@ erDiagram
 "event_card" {
   String id PK
   String template_key
-  String thumbnail_image_id FK
+  String thumbnail_image_id FK "nullable"
   String password
   String title
   String address
@@ -46,7 +46,7 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
-"event_card" }o--|| "event_card_file" : thumbnail_image
+"event_card" }o--o| "event_card_file" : thumbnail_image
 "event_card_file" |o--|| "attachment_file" : attachment_file
 "event_card_comment" }o--|| "event_card" : event_card
 ```
@@ -68,7 +68,7 @@ erDiagram
 - `thumbnail_image_id`: 대표 이미지
 - `password`: 관리용 비밀번호
 - `title`: 제목
-- `address`: 기본 주���
+- `address`: 기본 주소
 - `address_detail`: 상세 주소
 - `invitation_message`: 초대글
 - `event_time`: 이벤트 일자
