@@ -1,6 +1,6 @@
 {
     "name": "@ddi-ring/backend",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "ddi ring service backend project",
     "main": "build/main",
     "scripts": {
