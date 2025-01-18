@@ -5,13 +5,14 @@ CREATE TYPE "EventCardFileType" AS ENUM ('thumbnail_image', 'gallery_image');
 CREATE TABLE "event_card" (
     "id" UUID NOT NULL,
     "template_key" TEXT NOT NULL,
-    "thumbnail_image_id" UUID NOT NULL,
+    "thumbnail_image_id" UUID,
     "password" VARCHAR(50) NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "address" VARCHAR(255) NOT NULL,
     "address_detail" VARCHAR(255) NOT NULL,
     "invitation_message" TEXT NOT NULL,
-    "event_time" TIMESTAMPTZ(0) NOT NULL,
+    "event_started_at" TIMESTAMPTZ(0) NOT NULL,
+    "event_ended_at" TIMESTAMPTZ(0) NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL,
     "updated_at" TIMESTAMPTZ(6),
     "deleted_at" TIMESTAMPTZ(6),
@@ -56,7 +57,7 @@ CREATE TABLE "attachment_file" (
 );
 
 -- AddForeignKey
-ALTER TABLE "event_card" ADD CONSTRAINT "event_card_thumbnail_image_id_fkey" FOREIGN KEY ("thumbnail_image_id") REFERENCES "event_card_file"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "event_card" ADD CONSTRAINT "event_card_thumbnail_image_id_fkey" FOREIGN KEY ("thumbnail_image_id") REFERENCES "event_card_file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "event_card_file" ADD CONSTRAINT "event_card_file_id_fkey" FOREIGN KEY ("id") REFERENCES "attachment_file"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

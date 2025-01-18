@@ -17,7 +17,8 @@ erDiagram
   String address
   String address_detail
   String invitation_message
-  DateTime event_time
+  DateTime event_started_at
+  DateTime event_ended_at
   DateTime created_at
   DateTime updated_at "nullable"
   DateTime deleted_at "nullable"
@@ -71,7 +72,8 @@ erDiagram
 - `address`: 기본 주소
 - `address_detail`: 상세 주소
 - `invitation_message`: 초대글
-- `event_time`: 이벤트 일자
+- `event_started_at`: 이벤트 시작 일자
+- `event_ended_at`: 이벤트 종료 일자
 - `created_at`: 생성일자
 - `updated_at`: 수정일자
 - `deleted_at`: 삭제일자
