@@ -12,7 +12,7 @@ import { LogLevelType } from "./level.type";
 @Injectable()
 export class LoggerService {
     private winstonLogger: {
-        log: (level: Exclude<Lowercase<LogLevelType>, "all" | "off">, context: { message: [unknown, ...unknown[]] }) => void;
+        log: (level: Exclude<LogLevelType, "ALL" | "OFF">, context: { message: [unknown, ...unknown[]] }) => void;
     };
     constructor(private readonly cls: ClsService) {
         this.winstonLogger = winston.createLogger({
@@ -22,24 +22,24 @@ export class LoggerService {
         });
     }
     fatal(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("fatal", { message });
+        this.winstonLogger.log("FATAL", { message });
     }
     error(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("error", { message });
+        this.winstonLogger.log("ERROR", { message });
     }
     warn(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("warn", { message });
+        this.winstonLogger.log("WARN", { message });
     }
     info(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("info", { message });
+        this.winstonLogger.log("INFO", { message });
     }
     debug(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("debug", { message });
+        this.winstonLogger.log("DEBUG", { message });
     }
     trace(...message: [unknown, ...unknown[]]): void {
-        this.winstonLogger.log("trace", { message });
+        this.winstonLogger.log("TRACE", { message });
     }
     log(...message: [unknown, ...unknown[]]): void {
-        this.log(...message);
+        this.winstonLogger.log("INFO", { message });
     }
 }

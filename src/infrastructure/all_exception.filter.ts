@@ -27,7 +27,7 @@ export class AllExceptionFilter implements nest.ExceptionFilter {
             400: "INPUT_INVALID",
             404: "API_NOT_FOUND",
         };
-        this.logger.fatal("hi", "hello");
+
         const [body, status]: [Err.Body<string>, number] =
             Err.is(exception) ? [exception.body, exception.status]
             : this.isHttpException(exception) ?
