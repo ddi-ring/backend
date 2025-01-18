@@ -1,4 +1,4 @@
-import { logger } from "@/infrastructure/logger/bootstrap-logger";
+import { logger } from "@/infrastructure/logger";
 
 import { createBackend } from "./backend";
 

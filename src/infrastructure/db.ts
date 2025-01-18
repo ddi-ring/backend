@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { logger } from "@/infrastructure/logger/bootstrap-logger";
+import { logger } from "@/infrastructure/logger";
 import { Make } from "@/util/make";
 
 import { config } from "./config";

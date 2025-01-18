@@ -5,11 +5,15 @@ import { Response } from "express";
 
 import { Err } from "@/common/err/err";
 import { SystemErr } from "@/common/err/err_code/system.code";
-import { logger } from "@/infrastructure/logger/bootstrap-logger";
+
+import { LoggerService } from "./logger/logger.service";
 
 @nest.Catch()
 export class AllExceptionFilter implements nest.ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+    constructor(
+        private readonly httpAdapterHost: HttpAdapterHost,
+        private readonly logger: LoggerService,
+    ) {}
 
     catch(exception: unknown, host: nest.ArgumentsHost) {
         const ctx = host.switchToHttp();
@@ -31,13 +35,13 @@ export class AllExceptionFilter implements nest.ExceptionFilter {
                     const status = exception.getStatus();
                     const code = SYSTEM_ERROR[status];
                     if (isUndefined(code)) {
-                        logger("fatal")("[AllExceptionFilter]", exception);
+                        this.logger.fatal("[AllExceptionFilter]", exception);
                         return [{ code: "INTERNAL_SERVER_ERROR", message: exception.message }, nest.HttpStatus.INTERNAL_SERVER_ERROR];
                     }
                     return [{ code, message: exception.message }, status];
                 })()
             :   (() => {
-                    logger("fatal")("[AllExceptionFilter]", exception);
+                    this.logger.fatal("[AllExceptionFilter]", exception);
                     return [
                         {
                             code: "INTERNAL_SERVER_ERROR",
