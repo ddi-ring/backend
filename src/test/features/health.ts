@@ -1,7 +1,7 @@
 import ddi from "@ddi-ring/api";
+import typia from "typia";
 
 export const test_health_check = async (connection: ddi.IConnection) => {
     const res = await ddi.functional.health.check(connection);
-    if (res.status === 200 && res.data === "hello world!") return;
-    throw Error("Health Check Fail!");
+    typia.assert<"hello world!">(res);
 };
