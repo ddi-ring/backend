@@ -1,3 +1,4 @@
+import { ClsService } from "nestjs-cls";
 import winston from "winston";
 
 import { LogLevelType } from "@/infrastructure/logger/level.type";
@@ -5,7 +6,7 @@ import { Exclude } from "@/util/type";
 
 import { stringifyLogFormat } from "./stringify.format";
 
-export const LOCAL_TRANSPORTS = () => [
+export const LOCAL_TRANSPORTS = (cls?: ClsService) => [
     new winston.transports.Stream({
         stream: process.stdout,
         format: winston.format.combine(
@@ -21,9 +22,11 @@ export const LOCAL_TRANSPORTS = () => [
                     FATAL: "red",
                 } satisfies Record<Exclude<LogLevelType, "ALL" | "OFF">, "red" | "blue" | "yellow" | "green" | "gray" | "white">,
             }),
-            winston.format.printf(
-                (info) => `[${info.level}] ${new Date().toLocaleString("ko", { timeZone: "Asia/Seoul" })} ${info.message}`,
-            ),
+            winston.format.printf((info) => {
+                const requestId = cls?.getId?.() || null;
+                const requestIdPart = requestId ? `[${requestId}] ` : "";
+                return `[${info.level}] ${new Date().toLocaleString("ko", { timeZone: "Asia/Seoul" })} ${requestIdPart}${info.message}`;
+            }),
         ),
     }),
 ];

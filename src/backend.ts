@@ -6,7 +6,7 @@ import helmet from "helmet";
 import { AppModule } from "@/app/app.module";
 import { config } from "@/infrastructure/config";
 import { prisma } from "@/infrastructure/db";
-import { logger } from "@/infrastructure/logger";
+import { logger } from "@/infrastructure/logger/bootstrap-logger";
 import { OmitKeyof } from "@/util/type";
 
 export interface Backend {
