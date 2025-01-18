@@ -55,8 +55,10 @@ model event_card {
     address_detail     String    @database.VarChar(255)
     /// 초대글
     invitation_message String    @database.Text
-    /// 이벤트 일자
-    event_time         DateTime  @database.Timestamptz(0)
+    /// 이벤트 시작 일자
+    event_started_at   DateTime  @database.Timestamptz(0)
+    /// 이벤트 종료 일자
+    event_ended_at     DateTime  @database.Timestamptz(0)
     /// 생성일자
     created_at         DateTime  @database.Timestamptz(6)
     /// 수정일자

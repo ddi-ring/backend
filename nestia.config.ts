@@ -4,7 +4,7 @@ const NESTIA_CONFIG: nestia.INestiaConfig = {
     input: "src/**/*.controller.ts",
     output: "./sdk",
     simulate: false,
-    propagate: true,
+    propagate: false,
     clone: true,
     primitive: true,
     json: false,

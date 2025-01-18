@@ -23,8 +23,10 @@ export interface EventCard {
     address_detail: string;
     /** 모시는 글(초대글) */
     invitation_message: string;
-    /** 행사 일자 */
-    event_time: Regex.DateTime;
+    /** 이벤트 시작일 */
+    event_started_at: Regex.DateTime;
+    /** 이벤트 종료일 */
+    event_ended_at: Regex.DateTime;
     /** 카드 생성 일자 */
     created_at: Regex.DateTime;
     /** 카드 수정 일자 */
