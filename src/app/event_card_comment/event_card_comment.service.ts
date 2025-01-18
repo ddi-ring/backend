@@ -36,7 +36,7 @@ export class EventCardCommentService implements IEventCardCommentService {
     }
 
     async paginate(input: EventCardCommentSearchDTO): Promise<EventCardCommentPaginatedDTO> {
-        const size = input.size ?? 1;
+        const size = input.size ?? 10;
         const list = await prisma().event_card_comment.findMany({
             where: { event_card_id: input.event_card_id, deleted_at: null },
             orderBy: [{ created_at: "asc" }, { id: "desc" }],
