@@ -107,7 +107,7 @@ jobs:
             - name: Deploy Lambda
               uses: deploy-actions/lambda-api@v1
               with:
-                  Name: ddi-ring-backend
+                  Name: ddi-ring-backend-prd
                   ImageUri: ${{ steps.target.outputs.digest }}
                   MemorySize: 1024
                   Timeout: 10
